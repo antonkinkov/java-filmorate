@@ -32,6 +32,6 @@ public class User {
     private String name;
 
     @Past
-    protected LocalDate birthday;
+    public LocalDate birthday;
 
 }
