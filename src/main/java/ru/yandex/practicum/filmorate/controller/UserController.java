@@ -30,8 +30,11 @@ public class UserController {
     public List<User> getUsers() {
         return userService.getAll();
     }
+
     @GetMapping("/{id}")
-    public User getUser(@PathVariable(value = "id") Long id){return userService.findById(id);}
+    public User getUser(@PathVariable(value = "id") Long id) {
+        return userService.findById(id);
+    }
 
     @PutMapping("/{id}/friends/{friendId}")
     public boolean addFriends(@PathVariable(value = "id") Long id, @PathVariable(value = "friendId") Long friendId) {
