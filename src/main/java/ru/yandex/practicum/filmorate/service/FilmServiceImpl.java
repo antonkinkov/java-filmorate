@@ -21,8 +21,8 @@ public class FilmServiceImpl implements FilmService {
 
     private static final Comparator<Film> COMPARATOR_LIKES = (curFilm, nextFilm) -> nextFilm.getLikes().size() - curFilm.getLikes().size();
 
-    final UserStorage userStorage;
-    final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+    private final FilmStorage filmStorage;
 
     private final UserService userService;
 
