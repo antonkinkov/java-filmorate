@@ -7,16 +7,16 @@ public enum GenerateIdentifier {
 
     INSTANCE;
 
-    private final Map<Class<?>, Integer> identifier = new HashMap<>();
+    private final Map<Class<?>, Long> identifier = new HashMap<>();
 
-    public int generateId(Class<?> clazz) {
+    public long generateId(Class<?> clazz) {
         if (identifier.containsKey(clazz)) {
-            int id = identifier.get(clazz);
+            long id = identifier.get(clazz);
             identifier.put(clazz, ++id);
             return id;
 
         } else {
-            identifier.put(clazz, 1);
+            identifier.put(clazz, 1L);
             return 1;
         }
     }
