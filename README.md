@@ -1,6 +1,6 @@
 # База данных проекта
 Template repository for Filmorate project.
-![](C:\Users\antok\Downloads\Untitled.png)
+![Untitled (1).png](..%2F..%2FDownloads%2FUntitled%20%281%29.png)
 
 # Примеры запросов:
 ```
