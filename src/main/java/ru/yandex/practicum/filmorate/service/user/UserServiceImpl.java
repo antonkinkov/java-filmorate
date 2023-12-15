@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -6,13 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.db.user.UserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,7 +20,7 @@ public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
 
     @Override
-    public User addUser(@NonNull User user) {
+    public User create(@NonNull User user) {
 
         if (Objects.isNull(user.getName()) || user.getName().isBlank()) {
             user.setName(user.getLogin());
@@ -38,55 +36,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean addFriend(Long id, Long friendId) {
-        User sourceUser = validateUserId(id);
-        User targetUser = validateUserId(friendId);
+        validateUserId(id);
+        validateUserId(friendId);
 
-        sourceUser.getFriends().add(targetUser.getId());
-        targetUser.getFriends().add(sourceUser.getId());
-        return true;
+        return userStorage.addFriend(id, friendId);
     }
 
     @Override
     public boolean deleteFriend(Long id, Long friendId) {
-        User sourceUser = validateUserId(id);
-        User targetUser = validateUserId(friendId);
-
-        sourceUser.getFriends().remove(targetUser.getId());
-        targetUser.getFriends().remove(sourceUser.getId());
-        return true;
+        validateUserId(id);
+        validateUserId(friendId);
+        return userStorage.deleteFriend(id, friendId);
     }
 
     @Override
     public List<User> getFriends(Long id) {
-        User currentUser = validateUserId(id);
-
-        Set<Long> friendId = currentUser.getFriends();
-
-        return userStorage.getAll().stream()
-                .filter(user -> friendId.contains(user.getId()))
-                .collect(Collectors.toList());
-
+        validateUserId(id);
+        return userStorage.getFriends(id);
     }
 
     @Override
     public List<User> getCommonFriends(Long id, Long friendId) {
         User sourceUser = validateUserId(id);
-        User targetUser = validateUserId(friendId);
+        validateUserId(friendId);
 
 
         if (sourceUser.getFriends().isEmpty()) {
             return new ArrayList<>();
         }
 
-        List<Long> userId = sourceUser.getFriends()
-                .stream()
-                .filter(identity -> targetUser.getFriends().contains(identity))
-                .collect(Collectors.toList());
-
-        return userStorage.getAll().stream()
-                .filter(user -> userId.contains(user.getId()))
-                .collect(Collectors.toList());
-
+        return userStorage.getCommonFriends(id, friendId);
     }
 
     @Override
@@ -96,16 +75,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
-        User curUser = validateUserId(user.getId());
+        validateUserId(user.getId());
 
-        curUser.setName(user.getName());
-        curUser.setLogin(user.getLogin());
-        curUser.setBirthday(user.getBirthday());
-        curUser.setEmail(user.getEmail());
-
-        log.debug("Данные пользователя успешно обновлены.");
-        return curUser;
-
+        return userStorage.update(user).orElseThrow(() -> {
+            log.info("Ошибка при обновлении пользователя");
+            return new EntityNotFoundException("Ошибка при обновлении пользователя с id= " + user.getId());
+        });
     }
 
     private User validateUserId(Long id) {

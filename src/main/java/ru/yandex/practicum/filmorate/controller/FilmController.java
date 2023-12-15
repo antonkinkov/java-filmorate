@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,7 +19,7 @@ public class FilmController {
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
-        return filmService.addFilm(film);
+        return filmService.create(film);
     }
 
     @PutMapping
@@ -31,7 +31,6 @@ public class FilmController {
     public Film getFilm(@PathVariable(value = "id") Long id) {
         return filmService.findById(id);
     }
-
 
     @GetMapping
     public List<Film> getFilms() {
