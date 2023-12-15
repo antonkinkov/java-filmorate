@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.db.user.UserStorage;
 
@@ -20,11 +22,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureTestDatabase
 public class UserDbStorageTest {
 
+    private final JdbcTemplate jdbcTemplate;
+
     private final UserStorage userStorage;
 
     @Autowired
-    public UserDbStorageTest(UserStorage userStorage) {
+    public UserDbStorageTest(UserStorage userStorage,
+                             JdbcTemplate jdbcTemplate) {
         this.userStorage = userStorage;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @AfterEach
+    void clear() {
+        jdbcTemplate.update("DELETE FROM users");
     }
 
     @Test
