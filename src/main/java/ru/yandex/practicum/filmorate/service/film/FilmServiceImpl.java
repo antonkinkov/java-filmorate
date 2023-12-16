@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.db.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.db.user.UserStorage;
 
 import java.util.List;
 
@@ -18,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
 
-    private final UserStorage userStorage;
     private final FilmStorage filmStorage;
 
     private final UserService userService;
