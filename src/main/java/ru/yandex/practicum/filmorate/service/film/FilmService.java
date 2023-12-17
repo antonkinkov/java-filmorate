@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -11,7 +11,7 @@ public interface FilmService {
 
     boolean deleteLike(Long filmId, Long userId);
 
-    Film addFilm(Film film);
+    Film create(Film film);
 
     Film update(Film film);
 
